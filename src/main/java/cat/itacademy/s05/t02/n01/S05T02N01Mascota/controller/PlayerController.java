@@ -19,14 +19,21 @@ public class PlayerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createPlayer(@RequestBody CreatePlayerDTO playerDTO, HttpServletRequest request){
+    public ResponseEntity<String> createPlayer(@RequestBody CreatePlayerDTO playerDTO, HttpServletRequest request) {
         playerService.createPlayer(playerDTO, request);
-        return ResponseEntity.ok("User created successfully");
+        return ResponseEntity.ok("User created successfully.");
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<String> showPlayers(HttpServletRequest request){
+    public ResponseEntity<String> showPlayers(HttpServletRequest request) {
         List<ShowPlayerDTO> players = playerService.showPlayers(request);
-        return ResponseEntity.ok("Show all players");
+        return ResponseEntity.ok("Show all players.");
+    }
+
+    @GetMapping("/player/{id}")
+    public ResponseEntity<ShowPlayerDTO> showPlayer(@PathVariable Long id, HttpServletRequest request){
+        ShowPlayerDTO player = playerService.getPlayer(id, request);
+        return ResponseEntity.ok(player);
     }
 }
+

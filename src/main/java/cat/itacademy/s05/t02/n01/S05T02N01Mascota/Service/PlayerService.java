@@ -2,10 +2,7 @@ package cat.itacademy.s05.t02.n01.S05T02N01Mascota.Service;
 
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.CreatePlayerDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayerDTO;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.HairStyle;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerNationality;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerState;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerTeam;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.*;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.exception.UserNotFoundException;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.model.Player;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.model.User;
@@ -30,7 +27,7 @@ public class PlayerService {
         this.tokenJwt = tokenJwt;
     }
 
-    public String createPlayer(CreatePlayerDTO playerDTO, HttpServletRequest request){
+    public String createPlayer(CreatePlayerDTO playerDTO, HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
 
@@ -51,19 +48,53 @@ public class PlayerService {
         return "Player created successfully";
     }
 
-        public List<ShowPlayerDTO> showPlayers(HttpServletRequest request){
+    public List<ShowPlayerDTO> showPlayers(HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
+
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UserNotFoundException("player not found"));
-
-        List<Player> players = playerRepository.findByUser(user);
-
-        List<ShowPlayerDTO> listPlayers = players.stream()
-                .map(player -> new ShowPlayerDTO(player.getName(), player.getNationality(), player.getTeam(),player.getEnergy(),player.getHappiness()))
+        List<Player> players;
+        if (role.equals(RoleType.USER.name())) {
+            players = playerRepository.findByUser(user);
+        } else {
+            players = playerRepository.findAll();
+        }
+        return players.stream()
+                .map(player -> new ShowPlayerDTO(
+                        player.getName(),
+                        player.getNationality(),
+                        player.getTeam(),
+                        player.getEnergy(),
+                        player.getHappiness(),
+                        player.getHairStyle(),
+                        player.getState()
+                ))
                 .collect(Collectors.toList());
-                return listPlayers;
-     }
+    }
 
+    public ShowPlayerDTO getPlayer(Long id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
 
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
+        return new ShowPlayerDTO(
+                player.getName(),
+                player.getNationality(),
+                player.getTeam(),
+                player.getEnergy(),
+                player.getHappiness(),
+                player.getHairStyle(),
+                player.getState()
+        );
+    }
 }

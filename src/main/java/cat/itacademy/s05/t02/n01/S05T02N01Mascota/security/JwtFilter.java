@@ -8,11 +8,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class JwtFilther extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenJwt tokenJwt;
 
-    public JwtFilther(TokenJwt tokenJwt) {
+    public JwtFilter(TokenJwt tokenJwt) {
         this.tokenJwt = tokenJwt;
     }
 
