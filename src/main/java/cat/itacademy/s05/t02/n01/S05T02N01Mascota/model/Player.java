@@ -35,6 +35,8 @@ public class Player {
 
     private int energy;
     private int happiness;
+
+    @Enumerated(EnumType.STRING)
     private HairStyle hairStyle;
 
     

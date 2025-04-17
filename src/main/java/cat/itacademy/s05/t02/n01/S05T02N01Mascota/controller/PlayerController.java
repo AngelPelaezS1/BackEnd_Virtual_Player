@@ -30,7 +30,7 @@ public class PlayerController {
         return ResponseEntity.ok("Show all players.");
     }
 
-    @GetMapping("/player/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ShowPlayerDTO> showPlayer(@PathVariable Long id, HttpServletRequest request){
         ShowPlayerDTO player = playerService.getPlayer(id, request);
         return ResponseEntity.ok(player);

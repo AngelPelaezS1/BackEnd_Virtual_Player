@@ -23,4 +23,32 @@ public class ShowPlayerDTO {
         this.hairStyle = hairStyle;
         this.playerState = playerState;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public PlayerNationality getNationality() {
+        return nationality;
+    }
+
+    public PlayerTeam getTeam() {
+        return team;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public HairStyle getHairStyle() {
+        return hairStyle;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
 }
