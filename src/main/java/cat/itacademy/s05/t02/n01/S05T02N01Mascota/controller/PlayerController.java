@@ -25,9 +25,9 @@ public class PlayerController {
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<String> showPlayers(HttpServletRequest request) {
-        List<ShowPlayerDTO> players = playerService.showPlayers(request);
-        return ResponseEntity.ok("Show all players.");
+    public ResponseEntity<List<ShowPlayerDTO>> showPlayers(HttpServletRequest request) {
+        List<ShowPlayerDTO> players = playerService.showPlayers(request); // Obtienes los jugadores
+        return ResponseEntity.ok(players); // Devuelves la lista de jugadores
     }
 
     @GetMapping("/{id}")
