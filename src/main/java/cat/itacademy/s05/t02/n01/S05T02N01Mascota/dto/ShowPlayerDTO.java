@@ -13,8 +13,9 @@ public class ShowPlayerDTO {
     private int happiness;
     private HairStyle hairStyle;
     private PlayerState playerState;
+    private String userName;
 
-    public ShowPlayerDTO(String name, PlayerNationality nationality, PlayerTeam team, int energy, int happiness, HairStyle hairStyle, PlayerState playerState) {
+    public ShowPlayerDTO(String name, PlayerNationality nationality, PlayerTeam team, int energy, int happiness, HairStyle hairStyle, PlayerState playerState, String userName) {
         this.name = name;
         this.nationality = nationality;
         this.team = team;
@@ -22,6 +23,7 @@ public class ShowPlayerDTO {
         this.happiness = happiness;
         this.hairStyle = hairStyle;
         this.playerState = playerState;
+        this.userName = userName;
     }
 
     public String getName() {
@@ -50,5 +52,9 @@ public class ShowPlayerDTO {
 
     public PlayerState getPlayerState() {
         return playerState;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

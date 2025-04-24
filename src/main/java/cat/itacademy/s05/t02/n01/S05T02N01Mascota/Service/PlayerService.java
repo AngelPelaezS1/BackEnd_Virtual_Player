@@ -69,7 +69,8 @@ public class PlayerService {
                         player.getEnergy(),
                         player.getHappiness(),
                         player.getHairStyle(),
-                        player.getState()
+                        player.getState(),
+                        player.getUser().getName()
                 ))
                 .collect(Collectors.toList());
     }
@@ -94,7 +95,8 @@ public class PlayerService {
                 player.getEnergy(),
                 player.getHappiness(),
                 player.getHairStyle(),
-                player.getState()
+                player.getState(),
+                player.getUser().getName()
         );
     }
 }
