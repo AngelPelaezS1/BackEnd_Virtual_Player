@@ -1,9 +1,5 @@
 package cat.itacademy.s05.t02.n01.S05T02N01Mascota.model;
-
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.HairStyle;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerNationality;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerState;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerTeam;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.*;
 import jakarta.persistence.*;
 
 @Entity
@@ -33,6 +29,10 @@ public class Player {
     @Column(nullable = false)
     private PlayerState state;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PlayerMood mood;
+
     private int energy;
     private int happiness;
 
@@ -43,13 +43,14 @@ public class Player {
     public Player() {
     }
 
-    public Player(Long id, String name, PlayerNationality nationality, PlayerTeam team, User user, PlayerState state, int energy, int happiness, HairStyle hairStyle) {
+    public Player(Long id, String name, PlayerNationality nationality, PlayerTeam team, User user, PlayerState state, PlayerMood mood, int energy, int happiness, HairStyle hairStyle) {
         this.id = id;
         this.name = name;
         this.nationality = nationality;
         this.team = team;
         this.user = user;
         this.state = state;
+        this.mood = mood;
         this.energy = energy;
         this.happiness = happiness;
         this.hairStyle = hairStyle;
@@ -125,5 +126,23 @@ public class Player {
 
     public void setHairStyle(HairStyle hairStyle) {
         this.hairStyle = hairStyle;
+    }
+
+    public PlayerMood getMood() {
+        return mood;
+    }
+
+    public void setMood(PlayerMood mood) {
+        this.mood = mood;
+    }
+
+    public void updateMood(){
+        if(energy < 35 && happiness < 35){
+            setMood(PlayerMood.SAD);
+        }else if(energy > 65 && happiness > 65){
+            setMood(PlayerMood.HAPPY);
+        }else{
+            setMood(PlayerMood.NEUTRAL);
+        }
     }
 }

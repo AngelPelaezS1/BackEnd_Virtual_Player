@@ -21,7 +21,7 @@ public class PlayerController {
     @PostMapping("/create")
     public ResponseEntity<String> createPlayer(@RequestBody CreatePlayerDTO playerDTO, HttpServletRequest request) {
         playerService.createPlayer(playerDTO, request);
-        return ResponseEntity.ok("User created successfully.");
+        return ResponseEntity.ok("Player created successfully.");
     }
 
     @GetMapping("/showAll")
@@ -34,6 +34,12 @@ public class PlayerController {
     public ResponseEntity<ShowPlayerDTO> showPlayer(@PathVariable Long id, HttpServletRequest request){
         ShowPlayerDTO player = playerService.getPlayer(id, request);
         return ResponseEntity.ok(player);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deletePlayer(@PathVariable Long id, HttpServletRequest request){
+        playerService.deletePlayer(id, request);
+        return ResponseEntity.ok("Player created successfully.");
     }
 }
 

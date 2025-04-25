@@ -11,7 +11,6 @@ import cat.itacademy.s05.t02.n01.S05T02N01Mascota.repository.UserRepository;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.security.TokenJwt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +40,7 @@ public class PlayerService {
         player.setEnergy(50);
         player.setHappiness(50);
         player.setState(PlayerState.NEUTRAL);
+        player.setMood(PlayerMood.NEUTRAL);
         player.setHairStyle(HairStyle.DEFAULT);
         player.setUser(user);
         playerRepository.save(player);
@@ -70,6 +70,7 @@ public class PlayerService {
                         player.getHappiness(),
                         player.getHairStyle(),
                         player.getState(),
+                        player.getMood(),
                         player.getUser().getName()
                 ))
                 .collect(Collectors.toList());
@@ -96,7 +97,25 @@ public class PlayerService {
                 player.getHappiness(),
                 player.getHairStyle(),
                 player.getState(),
+                player.getMood(),
                 player.getUser().getName()
         );
+    }
+
+    public String deletePlayer(Long id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").replace("Bearer " , "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
+
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        if(role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
+        playerRepository.delete(player);
+        return "Player deleted successfully";
     }
 }

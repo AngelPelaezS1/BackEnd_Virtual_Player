@@ -1,9 +1,6 @@
 package cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto;
 
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.HairStyle;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerNationality;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerState;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerTeam;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.*;
 
 public class ShowPlayerDTO {
     private String name;
@@ -15,7 +12,7 @@ public class ShowPlayerDTO {
     private PlayerState playerState;
     private String userName;
 
-    public ShowPlayerDTO(String name, PlayerNationality nationality, PlayerTeam team, int energy, int happiness, HairStyle hairStyle, PlayerState playerState, String userName) {
+    public ShowPlayerDTO(String name, PlayerNationality nationality, PlayerTeam team, int energy, int happiness, HairStyle hairStyle, PlayerState playerState, PlayerMood mood, String userName) {
         this.name = name;
         this.nationality = nationality;
         this.team = team;
