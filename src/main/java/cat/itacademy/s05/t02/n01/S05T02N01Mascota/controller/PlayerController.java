@@ -1,6 +1,6 @@
 package cat.itacademy.s05.t02.n01.S05T02N01Mascota.controller;
 
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.Service.PlayerService;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.service.PlayerService;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.CreatePlayerDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayerDTO;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cat.itacademy.s05.t02.n01.S05T02N01Mascota.Service;
+package cat.itacademy.s05.t02.n01.S05T02N01Mascota.service;
 
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.CreatePlayerDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayerDTO;

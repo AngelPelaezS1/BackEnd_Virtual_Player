@@ -1,6 +1,6 @@
 package cat.itacademy.s05.t02.n01.S05T02N01Mascota.controller;
 
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.Service.AuthService;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.service.AuthService;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.AuthDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

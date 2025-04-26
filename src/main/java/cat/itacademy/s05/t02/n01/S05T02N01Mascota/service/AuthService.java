@@ -1,4 +1,4 @@
-package cat.itacademy.s05.t02.n01.S05T02N01Mascota.Service;
+package cat.itacademy.s05.t02.n01.S05T02N01Mascota.service;
 
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.RoleType;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.exception.LoginException;
