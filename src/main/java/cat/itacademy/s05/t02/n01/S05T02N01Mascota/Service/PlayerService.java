@@ -83,7 +83,6 @@ public class PlayerService {
 
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Player not found"));
         if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
@@ -109,7 +108,6 @@ public class PlayerService {
 
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Player not found"));
         if(role.equals("ROLE_USER") && !player.getUser().equals(user)) {
@@ -117,5 +115,37 @@ public class PlayerService {
         }
         playerRepository.delete(player);
         return "Player deleted successfully";
+    }
+
+    public void training(Long id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").replace("Bearer " , "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
+
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        if(role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
+        player.setHappiness(player.getHappiness() +15);
+        player.setEnergy(player.getEnergy() -10);
+    }
+
+    public void sleeping(Long id, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
+
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
+        player.setHappiness(player.getHappiness() +20);
+        player.setEnergy(100);
     }
 }

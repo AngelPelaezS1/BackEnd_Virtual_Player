@@ -109,6 +109,11 @@ public class Player {
     }
 
     public void setEnergy(int energy) {
+        if(energy > 100){
+            energy = 100;
+        }else if(energy < 0){
+            energy = 0;
+        }
         this.energy = energy;
     }
 
@@ -117,6 +122,11 @@ public class Player {
     }
 
     public void setHappiness(int happiness) {
+        if(happiness > 100){
+            happiness = 100;
+        }else if(happiness < 0){
+            happiness = 0;
+        }
         this.happiness = happiness;
     }
 
