@@ -11,7 +11,11 @@ import cat.itacademy.s05.t02.n01.S05T02N01Mascota.repository.UserRepository;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.security.TokenJwt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,9 +135,10 @@ public class PlayerService {
         }
         player.setHappiness(player.getHappiness() +15);
         player.setEnergy(player.getEnergy() -10);
+        playerRepository.save(player);
     }
 
-    public void sleeping(Long id, HttpServletRequest request) {
+    public void sleeping(Long id, HttpServletRequest request){
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
         String role = tokenJwt.getRoleFromToken(token);
@@ -147,5 +152,40 @@ public class PlayerService {
         }
         player.setHappiness(player.getHappiness() +20);
         player.setEnergy(100);
+        playerRepository.save(player);
+    }
+
+    public void updateTeam(Long id,String newTeamDTO, HttpServletRequest request){
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
+
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
+        PlayerTeam newTeam = PlayerTeam.valueOf(newTeamDTO.toUpperCase());
+        player.setTeam(newTeam);
+        playerRepository.save(player);
+    }
+
+    public void updateHair(Long id, String newHairDto, HttpServletRequest request){
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        String role = tokenJwt.getRoleFromToken(token);
+
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
+        HairStyle newHair = HairStyle.valueOf(newHairDto.toUpperCase());
+        player.setHairStyle(newHair);
+        playerRepository.save(player);
     }
 }
