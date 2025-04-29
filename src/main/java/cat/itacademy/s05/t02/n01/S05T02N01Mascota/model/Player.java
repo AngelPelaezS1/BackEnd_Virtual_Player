@@ -2,6 +2,8 @@ package cat.itacademy.s05.t02.n01.S05T02N01Mascota.model;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.*;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "players")
 public class Player {
@@ -39,11 +41,12 @@ public class Player {
     @Enumerated(EnumType.STRING)
     private HairStyle hairStyle;
 
-    
+    private LocalDateTime lastUpdated;
+
     public Player() {
     }
 
-    public Player(Long id, String name, PlayerNationality nationality, PlayerTeam team, User user, PlayerState state, PlayerMood mood, int energy, int happiness, HairStyle hairStyle) {
+    public Player(Long id, String name, PlayerNationality nationality, PlayerTeam team, User user, PlayerState state, PlayerMood mood, int energy, int happiness, HairStyle hairStyle, LocalDateTime lastUpdated) {
         this.id = id;
         this.name = name;
         this.nationality = nationality;
@@ -54,6 +57,7 @@ public class Player {
         this.energy = energy;
         this.happiness = happiness;
         this.hairStyle = hairStyle;
+        this.lastUpdated = lastUpdated;
     }
 
     public Long getId() {
@@ -144,6 +148,14 @@ public class Player {
 
     public void setMood(PlayerMood mood) {
         this.mood = mood;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public void updateMood(){

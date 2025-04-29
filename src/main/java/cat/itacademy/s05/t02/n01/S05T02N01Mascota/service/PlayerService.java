@@ -11,6 +11,8 @@ import cat.itacademy.s05.t02.n01.S05T02N01Mascota.repository.UserRepository;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.security.TokenJwt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,43 @@ public class PlayerService {
         if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
             throw new RuntimeException("This player doesn't belong to you");
         }
+    }
+
+    private Player getAuthorizedPlayer(Long id, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = tokenJwt.getUsernameFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
+
+        return player;
+    }
+
+    private void updateEnergyAndHappiness(Player player) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime lastUpdated = player.getLastUpdated();
+
+        if (lastUpdated == null) {
+            player.setLastUpdated(now);
+            return;
+        }
+
+        long minutes = Duration.between(lastUpdated, now).toMinutes();
+
+        int energyLoss = (int) (minutes * 20);
+        int happinessLoss = (int) (minutes * 20);
+
+        int newEnergy = Math.max(0, player.getEnergy() - energyLoss);
+        int newHappiness = Math.max(0, player.getHappiness() - happinessLoss);
+
+        player.setEnergy(newEnergy);
+        player.setHappiness(newHappiness);
+        player.setLastUpdated(now);
+
+        player.updateMood();
+        playerRepository.save(player);
     }
 
     public String createPlayer(CreatePlayerDTO playerDTO, HttpServletRequest request) {
@@ -92,13 +131,9 @@ public class PlayerService {
     }
 
     public ShowPlayerDTO getPlayer(Long id, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        String username = tokenJwt.getUsernameFromToken(token);
-        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+        Player player = getAuthorizedPlayer(id, request);
 
-        User user = findUserByName(username);
-        Player player = findPlayerById(id);
-        filterRole(player, user, role);
+        updateEnergyAndHappiness(player);
         return new ShowPlayerDTO(
                 player.getName(),
                 player.getNationality(),
@@ -113,64 +148,43 @@ public class PlayerService {
     }
 
     public String deletePlayer(Long id, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        String username = tokenJwt.getUsernameFromToken(token);
-        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+        Player player = getAuthorizedPlayer(id, request);
 
-        User user = findUserByName(username);
-        Player player = findPlayerById(id);
-        filterRole(player, user, role);
         playerRepository.delete(player);
         return "Player deleted successfully";
     }
 
     public void training(Long id, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        String username = tokenJwt.getUsernameFromToken(token);
-        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+        Player player = getAuthorizedPlayer(id, request);
+        updateEnergyAndHappiness(player);
 
-        User user = findUserByName(username);
-        Player player = findPlayerById(id);
-        filterRole(player, user, role);
         player.setHappiness(player.getHappiness() + 15);
         player.setEnergy(player.getEnergy() - 10);
+        player.updateMood();
         playerRepository.save(player);
     }
 
     public void sleeping(Long id, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        String username = tokenJwt.getUsernameFromToken(token);
-        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+        Player player = getAuthorizedPlayer(id, request);
+        updateEnergyAndHappiness(player);
 
-        User user = findUserByName(username);
-        Player player = findPlayerById(id);
-        filterRole(player, user, role);
         player.setHappiness(player.getHappiness() + 20);
         player.setEnergy(100);
+        player.updateMood();
         playerRepository.save(player);
     }
 
     public void updateTeam(Long id, String newTeamDTO, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        String username = tokenJwt.getUsernameFromToken(token);
-        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+        Player player = getAuthorizedPlayer(id, request);
 
-        User user = findUserByName(username);
-        Player player = findPlayerById(id);
-        filterRole(player, user, role);
         PlayerTeam newTeam = PlayerTeam.valueOf(newTeamDTO.toUpperCase());
         player.setTeam(newTeam);
         playerRepository.save(player);
     }
 
     public void updateHair(Long id, String newHairDto, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        String username = tokenJwt.getUsernameFromToken(token);
-        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
+        Player player = getAuthorizedPlayer(id, request);
 
-        User user = findUserByName(username);
-        Player player = findPlayerById(id);
-        filterRole(player, user, role);
         HairStyle newHair = HairStyle.valueOf(newHairDto.toUpperCase());
         player.setHairStyle(newHair);
         playerRepository.save(player);
