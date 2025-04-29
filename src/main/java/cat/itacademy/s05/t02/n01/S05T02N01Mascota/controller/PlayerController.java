@@ -1,10 +1,8 @@
 package cat.itacademy.s05.t02.n01.S05T02N01Mascota.controller;
 
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.UpdateHairDTO;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.UpdateTeamDTO;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.*;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.service.PlayerService;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.CreatePlayerDTO;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayerDTO;
+
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +25,8 @@ public class PlayerController {
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<List<ShowPlayerDTO>> showPlayers(HttpServletRequest request) {
-        List<ShowPlayerDTO> players = playerService.showPlayers(request);
+    public ResponseEntity<List<ShowPlayersDTO>> showPlayers(HttpServletRequest request) {
+        List<ShowPlayersDTO> players = playerService.showPlayers(request);
         return ResponseEntity.ok(players);
     }
 

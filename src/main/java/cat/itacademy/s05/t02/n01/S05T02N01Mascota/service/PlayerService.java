@@ -2,6 +2,7 @@ package cat.itacademy.s05.t02.n01.S05T02N01Mascota.service;
 
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.CreatePlayerDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayerDTO;
+import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayersDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.*;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.exception.UserNotFoundException;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.model.Player;
@@ -103,7 +104,7 @@ public class PlayerService {
         return "Player created successfully";
     }
 
-    public List<ShowPlayerDTO> showPlayers(HttpServletRequest request) {
+    public List<ShowPlayersDTO> showPlayers(HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
         String role = tokenJwt.getRoleFromToken(token);
@@ -116,15 +117,10 @@ public class PlayerService {
             players = playerRepository.findAll();
         }
         return players.stream()
-                .map(player -> new ShowPlayerDTO(
+                .map(player -> new ShowPlayersDTO(
                         player.getName(),
                         player.getNationality(),
                         player.getTeam(),
-                        player.getEnergy(),
-                        player.getHappiness(),
-                        player.getHairStyle(),
-                        player.getState(),
-                        player.getMood(),
                         player.getUser().getName()
                 ))
                 .collect(Collectors.toList());
