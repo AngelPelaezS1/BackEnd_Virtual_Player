@@ -11,11 +11,7 @@ import cat.itacademy.s05.t02.n01.S05T02N01Mascota.repository.UserRepository;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.security.TokenJwt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +24,22 @@ public class PlayerService {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.tokenJwt = tokenJwt;
+    }
+
+    private User findUserByName(String username) {
+        return userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    private Player findPlayerById(Long id) {
+        return playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+    }
+
+    private void filterRole(Player player, User user, RoleType role){
+        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
+            throw new RuntimeException("This player doesn't belong to you");
+        }
     }
 
     public String createPlayer(CreatePlayerDTO playerDTO, HttpServletRequest request) {
@@ -57,8 +69,7 @@ public class PlayerService {
         String username = tokenJwt.getUsernameFromToken(token);
         String role = tokenJwt.getRoleFromToken(token);
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("player not found"));
+        User user = findUserByName(username);
         List<Player> players;
         if (role.equals(RoleType.USER.name())) {
             players = playerRepository.findByUser(user);
@@ -80,18 +91,14 @@ public class PlayerService {
                 .collect(Collectors.toList());
     }
 
-    public ShowPlayerDTO getPlayer(Long id, HttpServletRequest request){
+    public ShowPlayerDTO getPlayer(Long id, HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
-        String role = tokenJwt.getRoleFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
-        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
-            throw new RuntimeException("This player doesn't belong to you");
-        }
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
         return new ShowPlayerDTO(
                 player.getName(),
                 player.getNationality(),
@@ -105,85 +112,65 @@ public class PlayerService {
         );
     }
 
-    public String deletePlayer(Long id, HttpServletRequest request){
-        String token = request.getHeader("Authorization").replace("Bearer " , "");
+    public String deletePlayer(Long id, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
-        String role = tokenJwt.getRoleFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
-        if(role.equals("ROLE_USER") && !player.getUser().equals(user)) {
-            throw new RuntimeException("This player doesn't belong to you");
-        }
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
         playerRepository.delete(player);
         return "Player deleted successfully";
     }
 
-    public void training(Long id, HttpServletRequest request){
-        String token = request.getHeader("Authorization").replace("Bearer " , "");
+    public void training(Long id, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
-        String role = tokenJwt.getRoleFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
-        if(role.equals("ROLE_USER") && !player.getUser().equals(user)) {
-            throw new RuntimeException("This player doesn't belong to you");
-        }
-        player.setHappiness(player.getHappiness() +15);
-        player.setEnergy(player.getEnergy() -10);
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
+        player.setHappiness(player.getHappiness() + 15);
+        player.setEnergy(player.getEnergy() - 10);
         playerRepository.save(player);
     }
 
-    public void sleeping(Long id, HttpServletRequest request){
+    public void sleeping(Long id, HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
-        String role = tokenJwt.getRoleFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
-        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
-            throw new RuntimeException("This player doesn't belong to you");
-        }
-        player.setHappiness(player.getHappiness() +20);
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
+        player.setHappiness(player.getHappiness() + 20);
         player.setEnergy(100);
         playerRepository.save(player);
     }
 
-    public void updateTeam(Long id,String newTeamDTO, HttpServletRequest request){
+    public void updateTeam(Long id, String newTeamDTO, HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
-        String role = tokenJwt.getRoleFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
-        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
-            throw new RuntimeException("This player doesn't belong to you");
-        }
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
         PlayerTeam newTeam = PlayerTeam.valueOf(newTeamDTO.toUpperCase());
         player.setTeam(newTeam);
         playerRepository.save(player);
     }
 
-    public void updateHair(Long id, String newHairDto, HttpServletRequest request){
+    public void updateHair(Long id, String newHairDto, HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = tokenJwt.getUsernameFromToken(token);
-        String role = tokenJwt.getRoleFromToken(token);
+        RoleType role = RoleType.valueOf(tokenJwt.getRoleFromToken(token));
 
-        User user = userRepository.findByName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
-        if (role.equals("ROLE_USER") && !player.getUser().equals(user)) {
-            throw new RuntimeException("This player doesn't belong to you");
-        }
+        User user = findUserByName(username);
+        Player player = findPlayerById(id);
+        filterRole(player, user, role);
         HairStyle newHair = HairStyle.valueOf(newHairDto.toUpperCase());
         player.setHairStyle(newHair);
         playerRepository.save(player);

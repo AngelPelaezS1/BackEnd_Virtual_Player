@@ -2,8 +2,6 @@ package cat.itacademy.s05.t02.n01.S05T02N01Mascota.controller;
 
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.UpdateHairDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.UpdateTeamDTO;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.HairStyle;
-import cat.itacademy.s05.t02.n01.S05T02N01Mascota.enums.PlayerTeam;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.service.PlayerService;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.CreatePlayerDTO;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.ShowPlayerDTO;
