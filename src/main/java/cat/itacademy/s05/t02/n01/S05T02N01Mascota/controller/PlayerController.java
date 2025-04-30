@@ -29,7 +29,7 @@ public class PlayerController {
         return ResponseEntity.ok(players);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/show/{id}")
     public ResponseEntity<ShowPlayerDTO> showPlayer(@PathVariable Long id, HttpServletRequest request){
         ShowPlayerDTO player = playerService.getPlayer(id, request);
         return ResponseEntity.ok(player);
@@ -57,11 +57,5 @@ public class PlayerController {
     public ResponseEntity<String> updateTeam(@PathVariable Long id, @RequestBody UpdateTeamDTO newTeam, HttpServletRequest request){
         playerService.updateTeam(id, newTeam.getNewTeam(), request);
         return ResponseEntity.ok("Player team updated successfully.");
-    }
-
-    @PutMapping("hair/{id}")
-    public ResponseEntity<String> updateHair(@PathVariable Long id, @RequestBody UpdateHairDTO newHair, HttpServletRequest request){
-        playerService.updateHair(id, newHair.getNewHair(), request);
-        return ResponseEntity.ok("Player hair updated successfully.");
     }
 }

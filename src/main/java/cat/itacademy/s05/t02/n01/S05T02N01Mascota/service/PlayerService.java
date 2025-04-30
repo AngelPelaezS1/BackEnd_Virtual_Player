@@ -117,6 +117,7 @@ public class PlayerService {
         }
         return players.stream()
                 .map(player -> new ShowPlayersDTO(
+                        player.getId(),
                         player.getName(),
                         player.getNationality(),
                         player.getTeam(),
