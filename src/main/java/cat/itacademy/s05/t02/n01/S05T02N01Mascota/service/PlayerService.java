@@ -97,7 +97,6 @@ public class PlayerService {
         player.setHappiness(50);
         player.setState(PlayerState.NEUTRAL);
         player.setMood(PlayerMood.NEUTRAL);
-        player.setHairStyle(HairStyle.DEFAULT);
         player.setUser(user);
         playerRepository.save(player);
 
@@ -136,7 +135,6 @@ public class PlayerService {
                 player.getTeam(),
                 player.getEnergy(),
                 player.getHappiness(),
-                player.getHairStyle(),
                 player.getState(),
                 player.getMood(),
                 player.getUser().getName()
@@ -175,14 +173,6 @@ public class PlayerService {
 
         PlayerTeam newTeam = PlayerTeam.valueOf(newTeamDTO.toUpperCase());
         player.setTeam(newTeam);
-        playerRepository.save(player);
-    }
-
-    public void updateHair(Long id, String newHairDto, HttpServletRequest request) {
-        Player player = getAuthorizedPlayer(id, request);
-
-        HairStyle newHair = HairStyle.valueOf(newHairDto.toUpperCase());
-        player.setHairStyle(newHair);
         playerRepository.save(player);
     }
 }

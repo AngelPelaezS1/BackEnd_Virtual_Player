@@ -2,7 +2,6 @@ package cat.itacademy.s05.t02.n01.S05T02N01Mascota.controller;
 
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.dto.*;
 import cat.itacademy.s05.t02.n01.S05T02N01Mascota.service.PlayerService;
-
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -66,4 +65,3 @@ public class PlayerController {
         return ResponseEntity.ok("Player hair updated successfully.");
     }
 }
-

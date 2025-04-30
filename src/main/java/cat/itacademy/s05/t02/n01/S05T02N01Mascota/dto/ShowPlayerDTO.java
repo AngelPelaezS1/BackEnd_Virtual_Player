@@ -8,17 +8,15 @@ public class ShowPlayerDTO {
     private PlayerTeam team;
     private int energy;
     private int happiness;
-    private HairStyle hairStyle;
     private PlayerState playerState;
     private String userName;
 
-    public ShowPlayerDTO(String name, PlayerNationality nationality, PlayerTeam team, int energy, int happiness, HairStyle hairStyle, PlayerState playerState, PlayerMood mood, String userName) {
+    public ShowPlayerDTO(String name, PlayerNationality nationality, PlayerTeam team, int energy, int happiness, PlayerState playerState, PlayerMood mood, String userName) {
         this.name = name;
         this.nationality = nationality;
         this.team = team;
         this.energy = energy;
         this.happiness = happiness;
-        this.hairStyle = hairStyle;
         this.playerState = playerState;
         this.userName = userName;
     }
@@ -41,10 +39,6 @@ public class ShowPlayerDTO {
 
     public int getHappiness() {
         return happiness;
-    }
-
-    public HairStyle getHairStyle() {
-        return hairStyle;
     }
 
     public PlayerState getPlayerState() {

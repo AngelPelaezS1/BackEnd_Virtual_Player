@@ -37,16 +37,12 @@ public class Player {
 
     private int energy;
     private int happiness;
-
-    @Enumerated(EnumType.STRING)
-    private HairStyle hairStyle;
-
     private LocalDateTime lastUpdated;
 
     public Player() {
     }
 
-    public Player(Long id, String name, PlayerNationality nationality, PlayerTeam team, User user, PlayerState state, PlayerMood mood, int energy, int happiness, HairStyle hairStyle, LocalDateTime lastUpdated) {
+    public Player(Long id, String name, PlayerNationality nationality, PlayerTeam team, User user, PlayerState state, PlayerMood mood, int energy, int happiness, LocalDateTime lastUpdated) {
         this.id = id;
         this.name = name;
         this.nationality = nationality;
@@ -56,7 +52,6 @@ public class Player {
         this.mood = mood;
         this.energy = energy;
         this.happiness = happiness;
-        this.hairStyle = hairStyle;
         this.lastUpdated = lastUpdated;
     }
 
@@ -126,20 +121,12 @@ public class Player {
     }
 
     public void setHappiness(int happiness) {
-        if(happiness > 100){
+        if (happiness > 100) {
             happiness = 100;
-        }else if(happiness < 0){
+        } else if (happiness < 0) {
             happiness = 0;
         }
         this.happiness = happiness;
-    }
-
-    public HairStyle getHairStyle() {
-        return hairStyle;
-    }
-
-    public void setHairStyle(HairStyle hairStyle) {
-        this.hairStyle = hairStyle;
     }
 
     public PlayerMood getMood() {
