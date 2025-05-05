@@ -62,25 +62,28 @@ public class PlayerService {
         LocalDateTime lastUpdated = player.getLastUpdated();
 
         if (lastUpdated == null) {
+            // Primera vez: restamos y guardamos el momento
+            player.setEnergy(Math.max(0, player.getEnergy() - 20));
+            player.setHappiness(Math.max(0, player.getHappiness() - 20));
             player.setLastUpdated(now);
+            player.updateMood();
+            playerRepository.save(player);
             return;
         }
 
-        long minutes = Duration.between(lastUpdated, now).toMinutes();
+        long minutesPassed = Duration.between(lastUpdated, now).toMinutes();
 
-        int energyLoss = (int) (minutes * 20);
-        int happinessLoss = (int) (minutes * 20);
-
-        int newEnergy = Math.max(0, player.getEnergy() - energyLoss);
-        int newHappiness = Math.max(0, player.getHappiness() - happinessLoss);
-
-        player.setEnergy(newEnergy);
-        player.setHappiness(newHappiness);
-        player.setLastUpdated(now);
-
-        player.updateMood();
-        playerRepository.save(player);
+        if (minutesPassed >= 1) {
+            // Solo restamos una vez cada minuto (aunque hayan pasado 5 min)
+            player.setEnergy(Math.max(0, player.getEnergy() - 20));
+            player.setHappiness(Math.max(0, player.getHappiness() - 20));
+            player.setLastUpdated(now);
+            player.updateMood();
+            playerRepository.save(player);
+        }
     }
+
+
 
     public String createPlayer(CreatePlayerDTO playerDTO, HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
@@ -98,6 +101,7 @@ public class PlayerService {
         player.setState(PlayerState.NEUTRAL);
         player.setMood(PlayerMood.NEUTRAL);
         player.setUser(user);
+        player.setLastUpdated(LocalDateTime.now());
         playerRepository.save(player);
 
         return "Player created successfully";
@@ -127,6 +131,19 @@ public class PlayerService {
     }
 
     public ShowPlayerDTO getPlayer(Long id, HttpServletRequest request) {
+        Player player = getAuthorizedPlayer(id, request);
+        return new ShowPlayerDTO(
+                player.getName(),
+                player.getNationality(),
+                player.getTeam(),
+                player.getEnergy(),
+                player.getHappiness(),
+                player.getUser().getName(),
+                player.getMood()
+        );
+    }
+
+    public ShowPlayerDTO refreshStats(Long id, HttpServletRequest request) {
         Player player = getAuthorizedPlayer(id, request);
         updateEnergyAndHappiness(player);
         return new ShowPlayerDTO(

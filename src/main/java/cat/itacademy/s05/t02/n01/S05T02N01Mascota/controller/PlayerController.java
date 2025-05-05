@@ -35,6 +35,11 @@ public class PlayerController {
         return ResponseEntity.ok(player);
     }
 
+    @GetMapping("/refresh/{id}")
+    public ShowPlayerDTO refreshPlayerStats(@PathVariable Long id, HttpServletRequest request) {
+        return playerService.refreshStats(id, request);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePlayer(@PathVariable Long id, HttpServletRequest request){
         playerService.deletePlayer(id, request);
