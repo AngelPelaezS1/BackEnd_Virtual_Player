@@ -128,7 +128,6 @@ public class PlayerService {
 
     public ShowPlayerDTO getPlayer(Long id, HttpServletRequest request) {
         Player player = getAuthorizedPlayer(id, request);
-
         updateEnergyAndHappiness(player);
         return new ShowPlayerDTO(
                 player.getName(),
@@ -136,9 +135,8 @@ public class PlayerService {
                 player.getTeam(),
                 player.getEnergy(),
                 player.getHappiness(),
-                player.getState(),
-                player.getMood(),
-                player.getUser().getName()
+                player.getUser().getName(),
+                player.getMood()
         );
     }
 

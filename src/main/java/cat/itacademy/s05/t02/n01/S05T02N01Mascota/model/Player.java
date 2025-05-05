@@ -146,9 +146,9 @@ public class Player {
     }
 
     public void updateMood(){
-        if(energy < 35 && happiness < 35){
+        if(energy < 30 && happiness < 30){
             setMood(PlayerMood.SAD);
-        }else if(energy > 65 && happiness > 65){
+        }else if(energy > 70 && happiness > 70){
             setMood(PlayerMood.HAPPY);
         }else{
             setMood(PlayerMood.NEUTRAL);
